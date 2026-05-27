@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#09090d" />
+  <meta name="application-name" content="TheMeltingDog's Crappy Shows and Movies" />
+  <meta name="description" content="TheMeltingDog's Crappy Shows and Movies streaming vault." />
+  <meta property="og:site_name" content="TheMeltingDog's Crappy Shows and Movies" />
+  <meta property="og:title" content="TheMeltingDog's Crappy Shows and Movies" />
+  <title>TheMeltingDog's Crappy Shows and Movies</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #09090d;
+      --bg-soft: #12121a;
+      --panel: rgba(15, 15, 22, 0.82);
+      --panel-strong: rgba(10, 10, 16, 0.95);
+      --line: rgba(255, 255, 255, 0.08);
+      --line-strong: rgba(255, 255, 255, 0.14);
+      --text: #f6f6f8;
+      --muted: #b4b6c3;
+      --subtle: #8e92a4;
+      --accent: #e50914;
+      --accent-soft: rgba(229, 9, 20, 0.22);
+      --accent-glow: rgba(229, 9, 20, 0.34);
+      --display-font: "Bahnschrift SemiCondensed", "Arial Narrow", "Aptos Display", sans-serif;
+      --body-font: "Aptos", "Segoe UI Variable Text", "Segoe UI", sans-serif;
+      font-family: var(--body-font);
+      background: var(--bg);
+      color: var(--text);
+      accent-color: var(--accent);
+      scroll-behavior: smooth;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      position: relative;
+      background:
+        radial-gradient(circle at top left, rgba(229, 9, 20, 0.18) 0, transparent 28%),
+        radial-gradient(circle at top right, rgba(255, 119, 36, 0.12) 0, transparent 22%),
+        linear-gradient(180deg, #0c0c12 0%, #09090d 52%, #050507 100%);
+      color: var(--text);
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(70px);
+      opacity: 0.7;
+    }
+
+    body::before {
+      width: 240px;
+      height: 240px;
+      top: 8%;
+      left: -40px;
+      background: rgba(229, 9, 20, 0.18);
+    }
+
+    body::after {
+      width: 300px;
+      height: 300px;
+      right: -80px;
+      bottom: 8%;
+      background: rgba(255, 132, 0, 0.12);
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      background: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    .app-shell {
+      position: relative;
+      z-index: 1;
+      width: min(1440px, 100%);
+      margin: 0 auto;
+      padding: 24px clamp(16px, 3vw, 34px) 42px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 0 24px;
+      backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 0;
+      text-align: left;
+    }
+
+    .brand-mark {
+      display: inline-grid;
+      place-items: center;
+      min-width: 62px;
+      min-height: 62px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background:
+        linear-gradient(180deg, #ff4552 0%, #cf0813 65%, #83040a 100%);
+      color: #fff;
+      font-family: var(--display-font);
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      box-shadow: 0 16px 40px rgba(229, 9, 20, 0.28);
+    }
+
+    .brand-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .brand-copy strong {
+      font-family: var(--display-font);
+      font-size: clamp(1.1rem, 2vw, 1.45rem);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .brand-copy span {
+      color: var(--muted);
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .topbar-meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .content-stack {
+      display: grid;
+      gap: 28px;
+    }
+
+    .home-view,
+    .detail-view {
+      display: grid;
+      gap: 28px;
+    }
+
+    .hero-panel,
+    .detail-banner,
+    .panel,
+    .title-card,
+    .spotlight-card {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: 0 30px 110px rgba(0, 0, 0, 0.28);
+      backdrop-filter: blur(18px);
+    }
+
+    .hero-panel,
+    .detail-banner {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+      gap: clamp(22px, 4vw, 42px);
+      padding: clamp(24px, 4vw, 40px);
+      border-radius: 34px;
+      overflow: hidden;
+      position: relative;
+      isolation: isolate;
+      min-height: 420px;
+    }
+
+    .hero-panel::before,
+    .detail-banner::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        linear-gradient(120deg, rgba(229, 9, 20, 0.12) 0%, transparent 45%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 38%);
+    }
+
+    .hero-copy,
+    .detail-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: #ffb0b5;
+      font-size: 0.8rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+    }
+
+    .hero-title,
+    .detail-title {
+      margin: 0;
+      font-family: var(--display-font);
+      font-size: clamp(2.5rem, 5vw, 5.6rem);
+      line-height: 0.94;
+      letter-spacing: -0.04em;
+      text-wrap: balance;
+    }
+
+    .hero-tagline,
+    .detail-tagline {
+      margin: 0;
+      color: #fff;
+      font-size: clamp(1.05rem, 2vw, 1.4rem);
+      line-height: 1.5;
+      max-width: 56ch;
+    }
+
+    .hero-description,
+    .detail-description {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 62ch;
+      font-size: 1rem;
+    }
+
+    .meta-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.9rem;
+      color: #f0f1f5;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding-top: 4px;
+    }
+
+    .primary-button,
+    .secondary-button,
+    .quiet-button,
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 0 20px;
+      border-radius: 16px;
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    }
+
+    .primary-button {
+      background: linear-gradient(180deg, #ff4a56 0%, #e50914 70%, #ab060f 100%);
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 18px 36px rgba(229, 9, 20, 0.28);
+    }
+
+    .secondary-button,
+    .quiet-button,
+    .back-button {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--line);
+      color: var(--text);
+    }
+
+    .primary-button:hover,
+    .secondary-button:hover,
+    .quiet-button:hover,
+    .back-button:hover,
+    .title-card:hover,
+    .episode-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .hint {
+      margin: 0;
+      color: var(--subtle);
+      font-size: 0.94rem;
+      line-height: 1.55;
+    }
+
+    .hero-art,
+    .detail-art {
+      align-self: stretch;
+      min-height: 100%;
+    }
+
+    .cover-image,
+    .cover-fallback {
+      width: 100%;
+      height: 100%;
+      border-radius: 28px;
+    }
+
+    .cover-image {
+      object-fit: cover;
+      border: 1px solid var(--line);
+    }
+
+    .cover-fallback {
+      --card-accent: var(--accent);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: clamp(22px, 3vw, 30px);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255, 112, 112, 0.34) 0, transparent 24%),
+        linear-gradient(160deg, rgba(255, 255, 255, 0.14) 0, transparent 36%),
+        linear-gradient(160deg, #37060c 0%, #17050a 55%, #07070a 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .cover-fallback::before {
+      content: "";
+      position: absolute;
+      inset: auto -10% -18% 24%;
+      height: 220px;
+      background: radial-gradient(circle, var(--accent-glow) 0, transparent 66%);
+      filter: blur(16px);
+      pointer-events: none;
+    }
+
+    .cover-fallback small {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      color: #ffd6d9;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.24em;
+    }
+
+    .cover-fallback strong {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      font-family: var(--display-font);
+      font-size: clamp(3rem, 8vw, 5.7rem);
+      line-height: 0.9;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .cover-fallback span {
+      position: relative;
+      z-index: 1;
+      align-self: flex-end;
+      max-width: 10ch;
+      margin: 0;
+      color: #f7dce0;
+      text-align: right;
+      line-height: 1.2;
+      font-size: 1rem;
+    }
+
+    .row-panel,
+    .panel {
+      border-radius: 30px;
+      padding: clamp(20px, 3vw, 28px);
+    }
+
+    .section-heading,
+    .panel-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .section-heading h2,
+    .panel-heading h3 {
+      margin: 0;
+      font-family: var(--display-font);
+      font-size: clamp(1.45rem, 2vw, 1.9rem);
+      letter-spacing: -0.02em;
+    }
+
+    .section-heading p,
+    .panel-heading p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .quiet-button {
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    .title-row {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(280px, 360px);
+      gap: 18px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: thin;
+      scroll-snap-type: x proximity;
+      overscroll-behavior-x: contain;
+    }
+
+    .title-card {
+      padding: 14px;
+      border-radius: 26px;
+      text-align: left;
+      display: grid;
+      gap: 16px;
+      scroll-snap-align: start;
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    }
+
+    .title-card:hover,
+    .title-card:focus-visible {
+      border-color: rgba(255, 255, 255, 0.22);
+      background: rgba(21, 21, 30, 0.95);
+      outline: none;
+    }
+
+    .card-art {
+      aspect-ratio: 16 / 10;
+      border-radius: 22px;
+      overflow: hidden;
+    }
+
+    .card-info {
+      display: grid;
+      gap: 10px;
+      padding: 0 6px 4px;
+    }
+
+    .card-overline {
+      margin: 0;
+      color: #ffc6cb;
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .card-title {
+      margin: 0;
+      font-size: 1.28rem;
+      line-height: 1.2;
+    }
+
+    .card-text {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 0.96rem;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--subtle);
+      font-size: 0.92rem;
+      flex-wrap: wrap;
+    }
+
+    .release-countdown {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      max-width: 100%;
+      padding: 12px 16px;
+      border-radius: 16px;
+      background: rgba(229, 9, 20, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #fff;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .back-button {
+      justify-self: start;
+      padding-inline: 18px;
+      color: #fff;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .episode-list,
+    .suggestion-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .episode-card {
+      width: 100%;
+      text-align: left;
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--line);
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    }
+
+    .episode-card.is-active {
+      border-color: rgba(255, 255, 255, 0.26);
+      background:
+        linear-gradient(145deg, rgba(229, 9, 20, 0.18), rgba(255, 255, 255, 0.05)),
+        rgba(255, 255, 255, 0.04);
+    }
+
+    .episode-topline,
+    .spotlight-topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .episode-code,
+    .spotlight-code {
+      margin: 0;
+      color: #ffcad0;
+      font-size: 0.82rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    .episode-runtime,
+    .spotlight-runtime {
+      margin: 0;
+      color: #fff;
+      font-size: 0.92rem;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .episode-name,
+    .spotlight-name {
+      margin: 0;
+      font-size: 1.18rem;
+      line-height: 1.3;
+    }
+
+    .episode-summary,
+    .spotlight-summary {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .episode-file,
+    .spotlight-file,
+    .empty-note {
+      margin: 0;
+      color: var(--subtle);
+      font-size: 0.92rem;
+      line-height: 1.6;
+      word-break: break-word;
+    }
+
+    .spotlight-card {
+      display: grid;
+      gap: 14px;
+      padding: 20px;
+      border-radius: 26px;
+    }
+
+    .empty-state {
+      border-radius: 24px;
+      border: 1px dashed rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.03);
+      padding: 20px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .footer-note {
+      color: var(--subtle);
+      text-align: center;
+      line-height: 1.8;
+      font-size: 0.95rem;
+      padding-top: 6px;
+    }
+
+    .player-stage {
+      padding: clamp(16px, 3vw, 26px);
+    }
+
+    .player-stage .panel-heading {
+      align-items: center;
+    }
+
+    .player-stage h3 {
+      margin: 8px 0 6px;
+      font-size: 1.75rem;
+      line-height: 1.2;
+    }
+
+    .player-frame {
+      position: relative;
+      overflow: hidden;
+      border-radius: 24px;
+      background: #000;
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+    }
+
+    .native-player,
+    .player-fallback {
+      width: 100%;
+      background: #000;
+    }
+
+    .native-player {
+      display: block;
+      aspect-ratio: 16 / 9;
+      outline: none;
+    }
+
+    .player-fallback {
+      position: relative;
+      min-height: clamp(260px, 54vw, 680px);
+      display: grid;
+      align-items: end;
+      overflow: hidden;
+    }
+
+    .player-backdrop {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      transform: scale(1.02);
+    }
+
+    .player-backdrop::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.72) 78%, rgba(0, 0, 0, 0.92) 100%);
+    }
+
+    .player-fallback-copy {
+      position: relative;
+      z-index: 1;
+      width: min(620px, 100%);
+      padding: clamp(20px, 4vw, 42px);
+      display: grid;
+      gap: 18px;
+    }
+
+    .player-summary,
+    .player-status {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .player-summary {
+      color: #f5f5f7;
+      max-width: 54ch;
+    }
+
+    .player-release {
+      background: rgba(0, 0, 0, 0.54);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.34);
+    }
+
+    .is-disabled {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-panel,
+    .detail-banner,
+    .row-panel,
+    .panel {
+      animation: rise 380ms ease both;
+    }
+
+    @media (max-width: 1040px) {
+      .hero-panel,
+      .detail-banner,
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-panel,
+      .detail-banner {
+        min-height: 0;
+      }
+
+      .hero-art,
+      .detail-art {
+        min-height: 320px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .app-shell {
+        padding-top: 16px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+        padding-bottom: 20px;
+      }
+
+      .topbar-meta {
+        justify-content: flex-start;
+      }
+
+      .brand-mark {
+        min-width: 54px;
+        min-height: 54px;
+      }
+
+      .title-row {
+        grid-auto-columns: minmax(250px, 86vw);
+      }
+
+      .player-frame {
+        border-radius: 20px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .hero-title,
+      .detail-title {
+        font-size: clamp(2.15rem, 11vw, 3.4rem);
+      }
+
+      .hero-panel,
+      .detail-banner,
+      .row-panel,
+      .panel {
+        border-radius: 24px;
+      }
+
+      .cover-fallback,
+      .cover-image,
+      .card-art,
+      .spotlight-card,
+      .episode-card,
+      .player-fallback,
+      .native-player {
+        border-radius: 20px;
+      }
+
+      .action-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .primary-button,
+      .secondary-button,
+      .quiet-button,
+      .back-button {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <button class="brand" id="homeButton" type="button" aria-label="Go to home">
+        <span class="brand-mark">MD</span>
+        <span class="brand-copy">
+          <strong>TheMeltingDog's Crappy</strong>
+          <span>Shows and Movies</span>
+        </span>
+      </button>
+
+      <div class="topbar-meta">
+        <span class="pill" id="libraryCount"></span>
+        <span class="pill">Streaming Vault</span>
+      </div>
+    </header>
+
+    <main class="content-stack">
+      <section class="home-view" id="homeView">
+        <section class="hero-panel">
+          <div class="hero-copy">
+            <p class="eyebrow">Featured Tonight</p>
+            <h1 class="hero-title" id="heroTitle"></h1>
+            <p class="hero-tagline" id="heroTagline"></p>
+            <div class="meta-row" id="heroMeta"></div>
+            <p class="release-countdown" id="heroReleaseCountdown"></p>
+            <p class="hero-description" id="heroDescription"></p>
+
+            <div class="action-row">
+              <button class="primary-button" id="heroWatchButton" type="button">Open Title</button>
+              <button class="secondary-button" id="heroDetailsButton" type="button">Episodes</button>
+            </div>
+
+            <p class="hint" id="heroHint">Series premiere.</p>
+          </div>
+
+          <div class="hero-art" id="heroArt"></div>
+        </section>
+
+        <section class="row-panel panel">
+          <div class="section-heading">
+            <div>
+              <h2>Available Now</h2>
+              <p>Release countdown is live.</p>
+            </div>
+
+            <button class="quiet-button" id="rowOpenButton" type="button">View Series</button>
+          </div>
+
+          <div class="title-row" id="titleRow"></div>
+        </section>
+      </section>
+
+      <section class="detail-view" id="detailView" hidden>
+        <button class="back-button" id="backButton" type="button">Back to home</button>
+
+        <section class="panel player-stage" id="playerStage">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow" id="playerSeriesLabel"></p>
+              <h3 id="playerEpisodeTitle"></h3>
+              <p class="player-status" id="playerStatus"></p>
+            </div>
+
+            <span class="pill" id="playerRuntimeBadge"></span>
+          </div>
+
+          <div class="player-frame">
+            <video class="native-player" id="nativePlayer" controls preload="metadata" playsinline hidden></video>
+
+            <div class="player-fallback" id="playerFallback">
+              <div class="player-backdrop" id="playerBackdrop"></div>
+              <div class="player-fallback-copy">
+                <p class="player-summary" id="playerSummary"></p>
+                <p class="release-countdown player-release" id="playerReleaseCountdown"></p>
+                <button class="primary-button" id="playInlineButton" type="button">Play Episode</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="detail-banner">
+          <div class="detail-copy">
+            <p class="eyebrow">Series Page</p>
+            <h2 class="detail-title" id="detailTitle"></h2>
+            <p class="detail-tagline" id="detailTagline"></p>
+            <div class="meta-row" id="detailMeta"></div>
+            <p class="detail-description" id="detailDescription"></p>
+          </div>
+
+          <div class="detail-art" id="detailArt"></div>
+        </section>
+
+        <div class="detail-grid">
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <h3>Episodes</h3>
+                <p>Season 1</p>
+              </div>
+            </div>
+
+            <div class="episode-list" id="episodeList"></div>
+          </section>
+
+          <div class="content-stack">
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <h3>Selected Episode</h3>
+                  <p>Episode details</p>
+                </div>
+              </div>
+
+              <div id="selectedEpisodeCard"></div>
+            </section>
+          </div>
+        </div>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <div>
+              <h3>More Like This</h3>
+              <p>From the vault</p>
+            </div>
+          </div>
+
+          <div class="title-row" id="suggestionsPanel"></div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="footer-note">
+      TheMeltingDog's Crappy Shows and Movies.
+    </footer>
+  </div>
+
+  <script>
+    // Library data for the current streaming layout.
+    const catalog = [
+      {
+        id: "tung-tung-tung-safamily",
+        title: "Tung Tung Tung Safamily",
+        tagline: "One family. Too much chaos. Zero normal decisions.",
+        kind: "Series",
+        year: "2026",
+        rating: "TV-14",
+        genres: ["Comedy", "Chaos"],
+        accent: "#e50914",
+        iconLabel: "TTTS",
+        art: "TTTSShowImage.jpg",
+        description: "A chaotic family comedy built on loud reactions, fast turns, and a house where calm never lasts for long.",
+        episodes: [
+          {
+            id: "tung-tung-tung-safamily-s1e1",
+            code: "S1:E1",
+            name: "The Game Chest",
+            summary: "The Safamily gathers around a mysterious chest packed with games, but opening it turns into a problem of its own. What starts as a simple family game night quickly spins into another strange disaster.",
+            runtime: "6m",
+            releaseAt: "2026-05-29T15:00:00-04:00",
+            src: "TTTSEpisode1.mp4"
+          }
+        ],
+        suggestions: []
+      }
+    ];
+
+    const showMap = new Map(catalog.map((show) => [show.id, show]));
+    const state = {
+      featuredShowId: catalog[0]?.id ?? null,
+      selectedEpisodeIds: Object.fromEntries(
+        catalog.map((show) => [show.id, show.episodes[0]?.id ?? null]),
+      ),
+      episodeRuntime: {},
+      activePlayback: null,
+    };
+
+    const homeButton = document.getElementById("homeButton");
+    const libraryCount = document.getElementById("libraryCount");
+    const homeView = document.getElementById("homeView");
+    const detailView = document.getElementById("detailView");
+    const heroTitle = document.getElementById("heroTitle");
+    const heroTagline = document.getElementById("heroTagline");
+    const heroMeta = document.getElementById("heroMeta");
+    const heroReleaseCountdown = document.getElementById("heroReleaseCountdown");
+    const heroDescription = document.getElementById("heroDescription");
+    const heroHint = document.getElementById("heroHint");
+    const heroArt = document.getElementById("heroArt");
+    const heroWatchButton = document.getElementById("heroWatchButton");
+    const heroDetailsButton = document.getElementById("heroDetailsButton");
+    const rowOpenButton = document.getElementById("rowOpenButton");
+    const titleRow = document.getElementById("titleRow");
+    const backButton = document.getElementById("backButton");
+    const detailTitle = document.getElementById("detailTitle");
+    const detailTagline = document.getElementById("detailTagline");
+    const detailMeta = document.getElementById("detailMeta");
+    const detailDescription = document.getElementById("detailDescription");
+    const detailArt = document.getElementById("detailArt");
+    const episodeList = document.getElementById("episodeList");
+    const selectedEpisodeCard = document.getElementById("selectedEpisodeCard");
+    const suggestionsPanel = document.getElementById("suggestionsPanel");
+    const nativePlayer = document.getElementById("nativePlayer");
+    const playerFallback = document.getElementById("playerFallback");
+    const playerRuntimeBadge = document.getElementById("playerRuntimeBadge");
+    const playInlineButton = document.getElementById("playInlineButton");
+    const playerBackdrop = document.getElementById("playerBackdrop");
+    const playerReleaseCountdown = document.getElementById("playerReleaseCountdown");
+    const playerSummary = document.getElementById("playerSummary");
+    const playerSeriesLabel = document.getElementById("playerSeriesLabel");
+    const playerEpisodeTitle = document.getElementById("playerEpisodeTitle");
+    const playerStatus = document.getElementById("playerStatus");
+
+    libraryCount.textContent = `${catalog.length} ${catalog.length === 1 ? "title" : "titles"}`;
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, (character) => {
+        const entityMap = {
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          "\"": "&quot;",
+          "'": "&#39;",
+        };
+        return entityMap[character];
+      });
+    }
+
+    function pluralize(count, singular, plural) {
+      return `${count} ${count === 1 ? singular : plural}`;
+    }
+
+    function formatRuntime(seconds) {
+      if (!Number.isFinite(seconds) || seconds <= 0) {
+        return "Runtime pending";
+      }
+
+      const totalSeconds = Math.floor(seconds);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const remainingSeconds = totalSeconds % 60;
+
+      if (hours > 0) {
+        return `${hours}h ${String(minutes).padStart(2, "0")}m`;
+      }
+
+      if (minutes > 0) {
+        return `${minutes}m`;
+      }
+
+      return `${remainingSeconds}s`;
+    }
+
+    function getReleaseDate(episode) {
+      return episode?.releaseAt ? new Date(episode.releaseAt) : null;
+    }
+
+    function isReleased(episode) {
+      const releaseDate = getReleaseDate(episode);
+      return !releaseDate || Date.now() >= releaseDate.getTime();
+    }
+
+    function formatReleaseDate(episode) {
+      const releaseDate = getReleaseDate(episode);
+      if (!releaseDate) {
+        return "";
+      }
+
+      return releaseDate.toLocaleString(undefined, {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        timeZoneName: "short",
+      });
+    }
+
+    function formatCountdown(episode) {
+      const releaseDate = getReleaseDate(episode);
+      if (!releaseDate) {
+        return "";
+      }
+
+      const remainingMilliseconds = releaseDate.getTime() - Date.now();
+      if (remainingMilliseconds <= 0) {
+        return "Streaming now";
+      }
+
+      const totalSeconds = Math.floor(remainingMilliseconds / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      const dayLabel = days > 0 ? `${days}d ` : "";
+      return `Releases in ${dayLabel}${String(hours).padStart(2, "0")}h ${String(minutes).padStart(2, "0")}m ${String(seconds).padStart(2, "0")}s`;
+    }
+
+    function getAvailabilityLabel(episode) {
+      if (!episode) {
+        return "Coming soon";
+      }
+
+      return isReleased(episode) ? "Available now" : formatCountdown(episode);
+    }
+
+    function getFeaturedShow() {
+      return showMap.get(state.featuredShowId) ?? catalog[0] ?? null;
+    }
+
+    function getRouteShow() {
+      const matched = window.location.hash.match(/^#\/(.+)$/);
+      if (!matched) {
+        return null;
+      }
+
+      return showMap.get(decodeURIComponent(matched[1])) ?? null;
+    }
+
+    function getSelectedEpisode(show) {
+      if (!show) {
+        return null;
+      }
+
+      const selectedId = state.selectedEpisodeIds[show.id];
+      return show.episodes.find((episode) => episode.id === selectedId) ?? show.episodes[0] ?? null;
+    }
+
+    function getEpisodeRuntimeLabel(episode) {
+      if (!episode) {
+        return "Runtime pending";
+      }
+
+      return state.episodeRuntime[episode.id]?.runtimeLabel ?? episode.runtime ?? "Runtime pending";
+    }
+
+    function getShowRuntimeLabel(show) {
+      const selectedEpisode = getSelectedEpisode(show);
+      return getEpisodeRuntimeLabel(selectedEpisode);
+    }
+
+    function buildArtMarkup(show, labelText) {
+      if (show.art) {
+        return `<img class="cover-image" src="${escapeHtml(show.art)}" alt="${escapeHtml(show.title)} artwork" />`;
+      }
+
+      return `
+        <div class="cover-fallback">
+          <small>${escapeHtml(labelText)}</small>
+          <strong>${escapeHtml(show.iconLabel || "SHOW")}</strong>
+          <span>${escapeHtml(show.title)}</span>
+        </div>
+      `;
+    }
+
+    function buildMetaMarkup(items) {
+      return items
+        .filter(Boolean)
+        .map((item) => `<span class="meta-chip">${escapeHtml(item)}</span>`)
+        .join("");
+    }
+
+    function createTitleCard(show) {
+      return `
+        <button class="title-card" type="button" data-open-show="${escapeHtml(show.id)}" aria-label="Open ${escapeHtml(show.title)}">
+          <div class="card-art">
+            ${buildArtMarkup(show, isReleased(getSelectedEpisode(show)) ? "Now Streaming" : "Premieres Soon")}
+          </div>
+          <div class="card-info">
+            <p class="card-overline">${escapeHtml(show.kind)} / ${escapeHtml(pluralize(show.episodes.length, "episode", "episodes"))}</p>
+            <h3 class="card-title">${escapeHtml(show.title)}</h3>
+            <p class="card-text">${escapeHtml(show.description)}</p>
+            <div class="card-meta">
+              <span>${escapeHtml(getAvailabilityLabel(getSelectedEpisode(show)))}</span>
+              <span>${escapeHtml(show.rating)}</span>
+            </div>
+          </div>
+        </button>
+      `;
+    }
+
+    function createEpisodeCard(show, episode, isActive) {
+      return `
+        <button class="episode-card${isActive ? " is-active" : ""}" type="button" data-episode-id="${escapeHtml(episode.id)}">
+          <div class="episode-topline">
+            <p class="episode-code">${escapeHtml(episode.code)}</p>
+            <p class="episode-runtime">${escapeHtml(getEpisodeRuntimeLabel(episode))}</p>
+          </div>
+          <h4 class="episode-name">${escapeHtml(episode.name)}</h4>
+          <p class="episode-summary">${escapeHtml(episode.summary)}</p>
+          <p class="episode-file">${escapeHtml(getAvailabilityLabel(episode))}</p>
+        </button>
+      `;
+    }
+
+    function createSuggestionMarkup(show) {
+      const suggestions = show.suggestions
+        .map((suggestionId) => showMap.get(suggestionId))
+        .filter(Boolean);
+
+      if (!suggestions.length) {
+        return `
+          <div class="empty-state">
+            More titles are coming soon.
+          </div>
+        `;
+      }
+
+      return suggestions.map((suggestion) => createTitleCard(suggestion)).join("");
+    }
+
+    function createSelectedEpisodeMarkup(episode) {
+      if (!episode) {
+        return `
+          <div class="empty-state">
+            No episode selected.
+          </div>
+        `;
+      }
+
+      return `
+        <article class="spotlight-card">
+          <div class="spotlight-topline">
+            <p class="spotlight-code">${escapeHtml(episode.code)}</p>
+            <p class="spotlight-runtime">${escapeHtml(getEpisodeRuntimeLabel(episode))}</p>
+          </div>
+          <h4 class="spotlight-name">${escapeHtml(episode.name)}</h4>
+          <p class="spotlight-summary">${escapeHtml(episode.summary)}</p>
+          <p class="spotlight-file">${escapeHtml(getAvailabilityLabel(episode))}</p>
+        </article>
+      `;
+    }
+
+    function resetInlinePlayer() {
+      nativePlayer.pause();
+      nativePlayer.hidden = true;
+      nativePlayer.removeAttribute("src");
+      nativePlayer.load();
+      playerFallback.hidden = false;
+      state.activePlayback = null;
+    }
+
+    function renderInlinePlayer(show, episode) {
+      if (!show || !episode) {
+        playerSeriesLabel.textContent = "";
+        playerEpisodeTitle.textContent = "";
+        playerStatus.textContent = "";
+        playerRuntimeBadge.textContent = "";
+        playerSummary.textContent = "";
+        playerReleaseCountdown.textContent = "";
+        playerReleaseCountdown.hidden = true;
+        playInlineButton.disabled = true;
+        playInlineButton.classList.add("is-disabled");
+        resetInlinePlayer();
+        return;
+      }
+
+      const samePlayback = state.activePlayback?.episodeId === episode.id && !nativePlayer.hidden;
+
+      playerSeriesLabel.textContent = `${show.title} / ${episode.code}`;
+      playerEpisodeTitle.textContent = episode.name;
+      playerStatus.textContent = samePlayback ? "Playing in the native video player." : isReleased(episode) ? "Ready to play." : `Premieres ${formatReleaseDate(episode)}`;
+      playerRuntimeBadge.textContent = getEpisodeRuntimeLabel(episode);
+      playerSummary.textContent = episode.summary;
+      playerReleaseCountdown.textContent = formatCountdown(episode);
+      playerReleaseCountdown.hidden = isReleased(episode);
+      playerBackdrop.style.backgroundImage = `linear-gradient(90deg, rgba(5, 5, 9, 0.86), rgba(5, 5, 9, 0.36)), url("${episode.art || show.art}")`;
+
+      const canPlay = Boolean(episode.src) && isReleased(episode);
+      playInlineButton.textContent = canPlay ? "Play Episode" : "Locked Until Release";
+      playInlineButton.disabled = !canPlay;
+      playInlineButton.classList.toggle("is-disabled", !canPlay);
+
+      if (!samePlayback) {
+        resetInlinePlayer();
+      }
+    }
+
+    function playSelectedEpisode() {
+      const show = getRouteShow();
+      const episode = getSelectedEpisode(show);
+
+      if (!show || !episode?.src || !isReleased(episode)) {
+        return;
+      }
+
+      state.activePlayback = { showId: show.id, episodeId: episode.id };
+      playerFallback.hidden = true;
+      nativePlayer.hidden = false;
+      nativePlayer.src = episode.src;
+      nativePlayer.load();
+      playerStatus.textContent = "Playing in the native video player.";
+      nativePlayer.focus();
+      nativePlayer.play().catch(() => {
+        playerStatus.textContent = "Press play in the native video player.";
+      });
+    }
+
+    function renderHome() {
+      const show = getFeaturedShow();
+      if (!show) {
+        return;
+      }
+
+      heroTitle.textContent = show.title;
+      heroTagline.textContent = show.tagline;
+      heroDescription.textContent = show.description;
+      heroMeta.innerHTML = buildMetaMarkup([
+        show.kind,
+        show.year,
+        show.rating,
+        pluralize(show.episodes.length, "episode", "episodes"),
+        getShowRuntimeLabel(show),
+      ]);
+      const featuredEpisode = getSelectedEpisode(show);
+      heroReleaseCountdown.textContent = formatCountdown(featuredEpisode);
+      heroReleaseCountdown.hidden = isReleased(featuredEpisode);
+      heroHint.textContent = isReleased(featuredEpisode)
+        ? "Series premiere available now."
+        : `Premieres ${formatReleaseDate(featuredEpisode)}.`;
+      heroArt.innerHTML = buildArtMarkup(show, "Featured Title");
+
+      titleRow.innerHTML = catalog.map((entry) => createTitleCard(entry)).join("");
+      titleRow.querySelectorAll("[data-open-show]").forEach((cardButton) => {
+        cardButton.addEventListener("click", () => {
+          openShow(cardButton.dataset.openShow);
+        });
+      });
+    }
+
+    function renderDetail(show) {
+      const selectedEpisode = getSelectedEpisode(show);
+
+      detailTitle.textContent = show.title;
+      detailTagline.textContent = show.tagline;
+      detailDescription.textContent = show.description;
+      detailMeta.innerHTML = buildMetaMarkup([
+        show.kind,
+        show.year,
+        show.rating,
+        pluralize(show.episodes.length, "episode", "episodes"),
+        show.genres.join(" / "),
+        getEpisodeRuntimeLabel(selectedEpisode),
+      ]);
+      detailArt.innerHTML = buildArtMarkup(show, "Series Page");
+      episodeList.innerHTML = show.episodes
+        .map((episode) => createEpisodeCard(show, episode, selectedEpisode?.id === episode.id))
+        .join("");
+
+      episodeList.querySelectorAll("[data-episode-id]").forEach((episodeButton) => {
+        episodeButton.addEventListener("click", () => {
+          state.selectedEpisodeIds[show.id] = episodeButton.dataset.episodeId;
+          renderApp();
+        });
+      });
+
+      selectedEpisodeCard.innerHTML = createSelectedEpisodeMarkup(selectedEpisode);
+      suggestionsPanel.innerHTML = createSuggestionMarkup(show);
+      suggestionsPanel.querySelectorAll("[data-open-show]").forEach((cardButton) => {
+        cardButton.addEventListener("click", () => {
+          openShow(cardButton.dataset.openShow);
+        });
+      });
+
+      renderInlinePlayer(show, selectedEpisode);
+      document.title = `${show.title} | TheMeltingDog's Crappy Shows and Movies`;
+    }
+
+    function renderApp() {
+      const routeShow = getRouteShow();
+      const onDetailPage = Boolean(routeShow);
+
+      homeView.hidden = onDetailPage;
+      detailView.hidden = !onDetailPage;
+      document.title = "TheMeltingDog's Crappy Shows and Movies";
+
+      renderHome();
+
+      if (routeShow) {
+        renderDetail(routeShow);
+      }
+    }
+
+    function openShow(showId) {
+      if (!showMap.has(showId)) {
+        return;
+      }
+
+      window.location.hash = `#/${encodeURIComponent(showId)}`;
+    }
+
+    function goHome() {
+      window.history.pushState({}, "", window.location.pathname + window.location.search);
+      renderApp();
+    }
+
+    function getPlaybackContext() {
+      if (!state.activePlayback) {
+        return null;
+      }
+
+      const show = showMap.get(state.activePlayback.showId);
+      const episode = show?.episodes.find((item) => item.id === state.activePlayback.episodeId) ?? null;
+
+      if (!show || !episode) {
+        return null;
+      }
+
+      return { show, episode };
+    }
+
+    homeButton.addEventListener("click", goHome);
+    backButton.addEventListener("click", goHome);
+
+    heroDetailsButton.addEventListener("click", () => {
+      const show = getFeaturedShow();
+      if (show) {
+        openShow(show.id);
+      }
+    });
+
+    rowOpenButton.addEventListener("click", () => {
+      const show = getFeaturedShow();
+      if (show) {
+        openShow(show.id);
+      }
+    });
+
+    heroWatchButton.addEventListener("click", () => {
+      const show = getFeaturedShow();
+      if (show) {
+        openShow(show.id);
+      }
+    });
+
+    playInlineButton.addEventListener("click", playSelectedEpisode);
+
+    nativePlayer.addEventListener("loadedmetadata", () => {
+      const playbackContext = getPlaybackContext();
+      if (!playbackContext) {
+        return;
+      }
+
+      const { episode } = playbackContext;
+      state.episodeRuntime[episode.id] = {
+        runtimeLabel: formatRuntime(nativePlayer.duration),
+        ready: true,
+        duration: nativePlayer.duration,
+      };
+      playerRuntimeBadge.textContent = formatRuntime(nativePlayer.duration);
+      playerStatus.textContent = nativePlayer.paused ? "Ready in the native video player." : "Playing in the native video player.";
+    });
+
+    nativePlayer.addEventListener("play", () => {
+      playerStatus.textContent = "Playing in the native video player.";
+    });
+
+    nativePlayer.addEventListener("pause", () => {
+      const playbackContext = getPlaybackContext();
+      if (playbackContext) {
+        playerStatus.textContent = "Paused.";
+      }
+    });
+
+    nativePlayer.addEventListener("error", () => {
+      const playbackContext = getPlaybackContext();
+      nativePlayer.hidden = true;
+      playerFallback.hidden = false;
+      playerStatus.textContent = playbackContext?.episode?.src ? "This episode is currently unavailable." : "Coming soon.";
+    });
+
+    window.addEventListener("hashchange", renderApp);
+    window.addEventListener("popstate", renderApp);
+
+    renderApp();
+    window.setInterval(renderApp, 1000);
+  </script>
+</body>
+</html>
