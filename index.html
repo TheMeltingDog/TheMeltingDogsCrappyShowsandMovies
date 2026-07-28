@@ -1172,7 +1172,7 @@
     const state = {
       featuredShowId: catalog[0]?.id ?? null,
       selectedEpisodeIds: Object.fromEntries(
-        catalog.map((show) => [show.id, show.episodes[0]?.id ?? null]),
+        catalog.map((show) => [show.id, show.episodes[show.episodes.length - 1]?.id ?? show.episodes[0]?.id ?? null]),
       ),
       episodeRuntime: {},
       activePlayback: null,
@@ -1326,7 +1326,7 @@
       }
 
       const selectedId = state.selectedEpisodeIds[show.id];
-      return show.episodes.find((episode) => episode.id === selectedId) ?? show.episodes[0] ?? null;
+      return show.episodes.find((episode) => episode.id === selectedId) ?? show.episodes[show.episodes.length - 1] ?? show.episodes[0] ?? null;
     }
 
     function getEpisodeRuntimeLabel(episode) {
