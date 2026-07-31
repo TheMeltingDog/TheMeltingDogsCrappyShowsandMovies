@@ -1464,7 +1464,7 @@
         <div class="landing-hero-copy">
           <p class="eyebrow">Exclusive Streaming Vault</p>
           <h1 class="landing-hero-title">Unlimited Streaming of Original Shows</h1>
-          <p class="landing-hero-desc">Watch complete episodes of <strong>Tung Tung Tung Safamily</strong> and catch upcoming premieres like <strong>Cracks in the Grain</strong>. Sign in or create an account to start streaming.</p>
+          <p class="landing-hero-desc">Watch complete episodes of <strong>Tung Tung Tung Safamily</strong> and catch upcoming premieres. Sign in or create an account to start streaming.</p>
 
           <div class="landing-feature-row">
             <span class="meta-chip">✨ 100% Free</span>
@@ -1515,7 +1515,6 @@
           </form>
 
           <button class="auth-toggle" id="authToggleBtn" type="button">Need an account? Sign up</button>
-          <button class="quiet-button" id="guestSignInBtn" type="button" style="width:100%;">Continue as Guest / Demo</button>
         </div>
       </main>
     </div>
@@ -2128,7 +2127,6 @@
     const authPassword = document.getElementById("authPassword");
     const authSubmitBtn = document.getElementById("authSubmitBtn");
     const authToggleBtn = document.getElementById("authToggleBtn");
-    const guestSignInBtn = document.getElementById("guestSignInBtn");
     const authError = document.getElementById("authError");
     const userBadgeContainer = document.getElementById("userBadgeContainer");
 
@@ -2263,14 +2261,6 @@
       authSubmitBtn.textContent = isSignUpMode ? "Create Account" : "Sign In";
       authToggleBtn.textContent = isSignUpMode ? "Already have an account? Sign in" : "Need an account? Sign up";
       authError.hidden = true;
-    });
-
-    guestSignInBtn.addEventListener("click", () => {
-      updateAuthUI({
-        displayName: "Guest",
-        email: "guest@themeltingdog.local",
-        photoURL: null
-      });
     });
 
     renderApp();
