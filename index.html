@@ -1024,27 +1024,101 @@
         scroll-behavior: auto !important;
       }
     }
-    /* ── Auth Gate Overlay ───────────────────────── */
-    .auth-overlay {
+    /* ── Full Landing Page ─────────────────────────── */
+    .landing-overlay {
       position: fixed;
       inset: 0;
       z-index: 9999;
-      display: grid;
-      place-items: center;
-      padding: 20px;
-      background: rgba(6, 6, 14, 0.84);
-      backdrop-filter: blur(24px) saturate(1.5);
-      -webkit-backdrop-filter: blur(24px) saturate(1.5);
-      transition: opacity 0.3s ease;
+      overflow-y: auto;
+      background:
+        radial-gradient(ellipse 90% 70% at 20% -10%, rgba(147, 51, 234, 0.25) 0, transparent 65%),
+        radial-gradient(ellipse 70% 60% at 85% 20%, rgba(99, 102, 241, 0.16) 0, transparent 55%),
+        linear-gradient(180deg, #0a0a14 0%, #08080f 60%, #060610 100%);
+      color: var(--text);
     }
 
-    .auth-overlay[hidden] {
+    .landing-overlay[hidden] {
       display: none !important;
     }
 
+    .landing-container {
+      width: min(1200px, 100%);
+      margin: 0 auto;
+      padding: 0 clamp(16px, 4vw, 40px) 48px;
+      display: grid;
+      gap: 24px;
+    }
+
+    .landing-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .landing-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(360px, 0.8fr);
+      gap: clamp(24px, 4vw, 48px);
+      align-items: start;
+      padding-top: 12px;
+    }
+
+    .landing-hero-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .landing-hero-title {
+      font-family: var(--display-font);
+      font-size: clamp(2.4rem, 5vw, 4.2rem);
+      font-weight: 800;
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      margin: 0;
+    }
+
+    .landing-hero-desc {
+      color: var(--muted);
+      font-size: clamp(1rem, 1.8vw, 1.15rem);
+      line-height: 1.6;
+      max-width: 54ch;
+      margin: 0;
+    }
+
+    .landing-feature-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .landing-preview-card {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: var(--panel);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+      margin-top: 10px;
+    }
+
+    .landing-preview-img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+    }
+
+    .landing-preview-info {
+      padding: 20px;
+      display: grid;
+      gap: 8px;
+    }
+
     .auth-card {
-      width: min(440px, 100%);
-      padding: clamp(28px, 5vw, 40px);
+      width: 100%;
+      padding: clamp(28px, 4vw, 36px);
       border-radius: 28px;
       background: rgba(14, 12, 24, 0.94);
       border: 1px solid rgba(168, 85, 247, 0.3);
@@ -1155,7 +1229,12 @@
 
     .auth-error {
       color: #f87171;
-      font-size: 0.82rem;
+      font-size: 0.84rem;
+      line-height: 1.45;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(248, 113, 113, 0.1);
+      border: 1px solid rgba(248, 113, 113, 0.25);
       margin: 0;
     }
 
@@ -1213,6 +1292,12 @@
     .logout-btn:hover {
       color: #f87171;
       background: rgba(248, 113, 113, 0.1);
+    }
+
+    @media (max-width: 900px) {
+      .landing-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -1361,42 +1446,78 @@
     </footer>
   </div>
 
-  <!-- Firebase Auth Overlay -->
-  <div class="auth-overlay" id="authOverlay">
-    <div class="auth-card">
-      <div class="auth-brand">
-        <span class="brand-mark">MD</span>
-        <h2 class="auth-title">Sign In to Stream</h2>
-        <p class="auth-subtitle">Log in with your account to access TheMeltingDog's Crappy Shows and Movies vault.</p>
-      </div>
-
-      <button class="google-btn" id="googleSignInBtn" type="button">
-        <svg width="18" height="18" viewBox="0 0 24 24">
-          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-        </svg>
-        Sign in with Google
-      </button>
-
-      <div class="auth-divider">or email</div>
-
-      <form class="auth-form" id="emailAuthForm">
-        <div class="auth-input-group">
-          <label class="auth-label" for="authEmail">Email</label>
-          <input class="auth-input" type="email" id="authEmail" required placeholder="you@example.com" />
+  <!-- Full Landing Page Overlay -->
+  <div class="landing-overlay" id="authOverlay">
+    <div class="landing-container">
+      <header class="landing-header">
+        <div class="brand">
+          <span class="brand-mark">MD</span>
+          <span class="brand-copy">
+            <strong>TheMeltingDog</strong>
+            <span>Shows & Movies</span>
+          </span>
         </div>
-        <div class="auth-input-group">
-          <label class="auth-label" for="authPassword">Password</label>
-          <input class="auth-input" type="password" id="authPassword" required placeholder="••••••••" />
-        </div>
-        <p class="auth-error" id="authError" hidden></p>
-        <button class="primary-button" type="submit" id="authSubmitBtn" style="width:100%; margin-top:6px;">Sign In</button>
-      </form>
+        <button class="secondary-button" type="button" onclick="document.getElementById('authEmail').focus()">Sign In</button>
+      </header>
 
-      <button class="auth-toggle" id="authToggleBtn" type="button">Need an account? Sign up</button>
-      <button class="quiet-button" id="guestSignInBtn" type="button" style="width:100%;">Continue as Guest / Demo</button>
+      <main class="landing-grid">
+        <div class="landing-hero-copy">
+          <p class="eyebrow">Exclusive Streaming Vault</p>
+          <h1 class="landing-hero-title">Unlimited Streaming of Original Shows</h1>
+          <p class="landing-hero-desc">Watch complete episodes of <strong>Tung Tung Tung Safamily</strong> and catch upcoming premieres like <strong>Cracks in the Grain</strong>. Sign in or create an account to start streaming.</p>
+
+          <div class="landing-feature-row">
+            <span class="meta-chip">✨ 100% Free</span>
+            <span class="meta-chip">🎬 HD Original Content</span>
+            <span class="meta-chip">⚡ Instant Access</span>
+          </div>
+
+          <div class="landing-preview-card">
+            <img class="landing-preview-img" src="TTTSShowImage.jpg" alt="Show Preview" />
+            <div class="landing-preview-info">
+              <p class="card-overline">Now Streaming • Season 1</p>
+              <h3 class="card-title">Tung Tung Tung Safamily</h3>
+              <p class="card-text">One family. Too much chaos. Zero normal decisions. Episode 1 available now!</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="auth-card">
+          <div class="auth-brand">
+            <span class="brand-mark">MD</span>
+            <h2 class="auth-title" id="authTitleText">Sign In to Stream</h2>
+            <p class="auth-subtitle">Log in or register to unlock full episodes.</p>
+          </div>
+
+          <button class="google-btn" id="googleSignInBtn" type="button">
+            <svg width="18" height="18" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            </svg>
+            Sign in with Google
+          </button>
+
+          <div class="auth-divider">or email</div>
+
+          <form class="auth-form" id="emailAuthForm">
+            <div class="auth-input-group">
+              <label class="auth-label" for="authEmail">Email</label>
+              <input class="auth-input" type="email" id="authEmail" required placeholder="you@example.com" />
+            </div>
+            <div class="auth-input-group">
+              <label class="auth-label" for="authPassword">Password</label>
+              <input class="auth-input" type="password" id="authPassword" required placeholder="••••••••" />
+            </div>
+            <p class="auth-error" id="authError" hidden></p>
+            <button class="primary-button" type="submit" id="authSubmitBtn" style="width:100%; margin-top:6px;">Sign In</button>
+          </form>
+
+          <button class="auth-toggle" id="authToggleBtn" type="button">Need an account? Sign up</button>
+          <button class="quiet-button" id="guestSignInBtn" type="button" style="width:100%;">Continue as Guest / Demo</button>
+        </div>
+      </main>
     </div>
   </div>
 
@@ -2055,6 +2176,36 @@
       updateAuthUI(null);
     }
 
+    function getFriendlyAuthError(err) {
+      if (!err) return "An unexpected error occurred. Please try again.";
+      const code = err.code || "";
+      switch (code) {
+        case "auth/popup-closed-by-user":
+        case "auth/cancelled-popup-request":
+          return "Sign-in was closed before completing. Please try again.";
+        case "auth/popup-blocked":
+          return "Sign-in popup was blocked by your browser. Please allow popups for this site.";
+        case "auth/wrong-password":
+        case "auth/user-not-found":
+        case "auth/invalid-credential":
+          return "Incorrect email or password. Please check your details.";
+        case "auth/invalid-email":
+          return "Please enter a valid email address.";
+        case "auth/email-already-in-use":
+          return "An account with this email address already exists. Try signing in.";
+        case "auth/weak-password":
+          return "Password should be at least 6 characters long.";
+        case "auth/unauthorized-domain":
+          return "Sign-in from this domain is not authorized yet in your Firebase Console.";
+        case "auth/network-request-failed":
+          return "Network connection issue. Please check your internet connection.";
+        case "auth/too-many-requests":
+          return "Too many failed attempts. Please wait a moment and try again.";
+        default:
+          return err.message || "Unable to sign in. Please try again.";
+      }
+    }
+
     googleSignInBtn.addEventListener("click", () => {
       authError.hidden = true;
       if (!firebaseInitialized) {
@@ -2067,7 +2218,7 @@
       }
       const provider = new firebase.auth.GoogleAuthProvider();
       firebase.auth().signInWithPopup(provider).catch((err) => {
-        authError.textContent = err.message;
+        authError.textContent = getFriendlyAuthError(err);
         authError.hidden = false;
       });
     });
@@ -2090,21 +2241,26 @@
       if (isSignUpMode) {
         firebase.auth().createUserWithEmailAndPassword(email, password)
           .catch((err) => {
-            authError.textContent = err.message;
+            authError.textContent = getFriendlyAuthError(err);
             authError.hidden = false;
           });
       } else {
         firebase.auth().signInWithEmailAndPassword(email, password)
           .catch((err) => {
-            authError.textContent = err.message;
+            authError.textContent = getFriendlyAuthError(err);
             authError.hidden = false;
           });
       }
     });
 
+    const authTitleText = document.getElementById("authTitleText");
+
     authToggleBtn.addEventListener("click", () => {
       isSignUpMode = !isSignUpMode;
-      authSubmitBtn.textContent = isSignUpMode ? "Sign Up" : "Sign In";
+      if (authTitleText) {
+        authTitleText.textContent = isSignUpMode ? "Create Your Account" : "Sign In to Stream";
+      }
+      authSubmitBtn.textContent = isSignUpMode ? "Create Account" : "Sign In";
       authToggleBtn.textContent = isSignUpMode ? "Already have an account? Sign in" : "Need an account? Sign up";
       authError.hidden = true;
     });
