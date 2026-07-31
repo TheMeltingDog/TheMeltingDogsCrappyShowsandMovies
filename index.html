@@ -1158,7 +1158,7 @@
             code: "S1:E2",
             name: "Cracks in the Grain",
             summary: "The story continues as new cracks begin to appear. Coming July 31, 2026.",
-            runtime: "Pending",
+            runtime: "7m",
             releaseAt: "2026-07-31T12:00:00-04:00",
             art: "TTTSShowImage2.jpg",
             src: "TTTSEpisode2.mp4"
@@ -1684,7 +1684,28 @@
     window.addEventListener("hashchange", renderApp);
     window.addEventListener("popstate", renderApp);
 
+    function preloadEpisodeRuntimes() {
+      catalog.forEach((show) => {
+        show.episodes.forEach((episode) => {
+          if (episode.src && !state.episodeRuntime[episode.id]) {
+            const tempVideo = document.createElement("video");
+            tempVideo.preload = "metadata";
+            tempVideo.addEventListener("loadedmetadata", () => {
+              state.episodeRuntime[episode.id] = {
+                runtimeLabel: formatRuntime(tempVideo.duration),
+                ready: true,
+                duration: tempVideo.duration,
+              };
+              renderApp();
+            });
+            tempVideo.src = episode.src;
+          }
+        });
+      });
+    }
+
     renderApp();
+    preloadEpisodeRuntimes();
     window.setInterval(renderApp, 1000);
   </script>
 </body>
