@@ -1543,17 +1543,21 @@
             summary: "The Safamily gathers around a mysterious chest packed with games, but opening it turns into a problem of its own. What starts as a simple family game night quickly spins into another strange disaster.",
             runtime: "6m",
             releaseAt: "2026-05-29T15:00:00-04:00",
-            src: "TTTSEpisode1.mp4"
+            src: "TTTSEpisode1.mp4",
+            paused: true,
+            pausedReason: "Episode paused for remastering"
           },
           {
             id: "tung-tung-tung-safamily-s1e2",
             code: "S1:E2",
             name: "Cracks in the Grain",
-            summary: "The story continues as new cracks begin to appear. Coming July 31, 2026.",
+            summary: "The story continues as new cracks begin to appear.",
             runtime: "7m",
             releaseAt: "2026-07-31T12:00:00-04:00",
             art: "TTTSShowImage2.jpg",
-            src: "TTTSEpisode2.mp4"
+            src: "TTTSEpisode2.mp4",
+            paused: true,
+            pausedReason: "Episode paused for remastering"
           }
         ],
         suggestions: []
@@ -1650,6 +1654,9 @@
     }
 
     function isReleased(episode) {
+      if (episode?.paused) {
+        return false;
+      }
       const releaseDate = getReleaseDate(episode);
       return !releaseDate || Date.now() >= releaseDate.getTime();
     }
@@ -1671,6 +1678,10 @@
     }
 
     function formatCountdown(episode) {
+      if (episode?.paused) {
+        return episode.pausedReason || "Episode paused for remastering";
+      }
+
       const releaseDate = getReleaseDate(episode);
       if (!releaseDate) {
         return "";
@@ -1694,6 +1705,10 @@
     function getAvailabilityLabel(episode) {
       if (!episode) {
         return "Coming soon";
+      }
+
+      if (episode.paused) {
+        return episode.pausedReason || "Episode paused for remastering";
       }
 
       return isReleased(episode) ? "Available now" : formatCountdown(episode);
@@ -1862,15 +1877,21 @@
 
       playerSeriesLabel.textContent = `${show.title} / ${episode.code}`;
       playerEpisodeTitle.textContent = episode.name;
-      playerStatus.textContent = samePlayback ? "Playing in the native video player." : isReleased(episode) ? "Ready to play." : `Premieres ${formatReleaseDate(episode)}`;
+      playerStatus.textContent = episode.paused
+        ? (episode.pausedReason || "Episode paused for remastering.")
+        : samePlayback
+        ? "Playing in the native video player."
+        : isReleased(episode)
+        ? "Ready to play."
+        : `Premieres ${formatReleaseDate(episode)}`;
       playerRuntimeBadge.textContent = getEpisodeRuntimeLabel(episode);
       playerSummary.textContent = episode.summary;
-      playerReleaseCountdown.textContent = formatCountdown(episode);
-      playerReleaseCountdown.hidden = isReleased(episode);
+      playerReleaseCountdown.textContent = episode.paused ? (episode.pausedReason || "Episode paused for remastering") : formatCountdown(episode);
+      playerReleaseCountdown.hidden = isReleased(episode) && !episode.paused;
       playerBackdrop.style.backgroundImage = `linear-gradient(90deg, rgba(5, 5, 9, 0.86), rgba(5, 5, 9, 0.36)), url("${episode.art || show.art}")`;
 
-      const canPlay = Boolean(episode.src) && isReleased(episode);
-      playInlineButton.textContent = canPlay ? "Play Episode" : "Locked Until Release";
+      const canPlay = Boolean(episode.src) && isReleased(episode) && !episode.paused;
+      playInlineButton.textContent = episode.paused ? "Episode Paused for Remastering" : canPlay ? "Play Episode" : "Locked Until Release";
       playInlineButton.disabled = !canPlay;
       playInlineButton.classList.toggle("is-disabled", !canPlay);
 
